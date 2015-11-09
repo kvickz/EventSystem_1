@@ -144,32 +144,61 @@ void EventSystem::SubscribeToEvent(eventData eventName, EventListener* pListener
 }
 
 //Private functions
+//-------------------------------------------------------------------------------------- -
+//  Register Event Sender Function
+//      -Will add the sender to the collection to be managed by the system
 void EventSystem::RegisterSender(EventSender* pSender)
 {
 	m_senders.push_back(pSender);
 }
 
+//-------------------------------------------------------------------------------------- -
+//  Register Event Sender Function
+//      -Will add the sender to the collection to be managed by the system
 void EventSystem::RegisterListener(EventListener* pListener)
 {
 	m_listeners.push_back(pListener);
 }
 
+#ifdef DEBUG
+
+//-------------------------------------------------------------------------------------- -
 //  Log Event Function
 //      -This function is designed to keep track of the order of events every update
 //       and clear each update as well.
 void EventSystem::LogEvent(eventData eventName)
 {
-    m_currentEventsThisUpdate.push(eventName);
+    m_currentEventsThisUpdate.emplace_back(eventName);
 
     std::cout << "Event: " << eventName << " executed.\n";
 }
 
+//-------------------------------------------------------------------------------------- -
+//  Print Current Events Function
+//      -This will print all the events for the current frame
+void EventSystem::PrintCurrentEvents()
+{
+    auto iterator = m_currentEventsThisUpdate.begin();
+
+    while (iterator != m_currentEventsThisUpdate.end())
+    {
+        std::cout << "Event Current Update: " << (*iterator) << std::endl;
+
+        ++iterator;
+    }
+
+    std::cout << std::endl << std::endl << std::endl;
+}
+
+//-------------------------------------------------------------------------------------- -
 //  Clear Logs Function
 //      -This function needs to be called by the game manager at the end of every update!
 void EventSystem::ClearLogs()
 {
     while (!m_currentEventsThisUpdate.empty())
     {
-        m_currentEventsThisUpdate.pop();
+        m_currentEventsThisUpdate.remove(*m_currentEventsThisUpdate.end());
     }
 }
+
+#endif // DEBUG

@@ -9,7 +9,7 @@
 #define DEBUG
 
 #include <vector>
-#include <queue>
+#include <list>
 #include <map>
 
 //-------------------------------------------------------------------------------------- -
@@ -119,26 +119,25 @@ private:
 	void RegisterListener(EventListener* pListener);
 
 #ifdef DEBUG    //Debugging functions
-    std::queue<eventData> m_currentEventsThisUpdate;
-    //[???] What data type would be most efficient for
+    std::list<eventData> m_currentEventsThisUpdate;
+    //[???] What data structure would be most efficient for
     //      something like this that needs to be constantly iterated
     //      on and cleared every update?
-    //      Every operation would essentially be O(n)
-    //      so I guess the important factors are the constants
-    //      involved with each operation
+    //
+    //      Every operation would essentially be O(n) because it has to print everything
+    //      so I guess the important factors are the constants involved with each operation
 
     //Logging functions
     //
     //This will log every event FIRED this update
     void LogEvent(eventData eventName);
+    //This will print all events queued up until this point
+    void PrintCurrentEvents();
     //This needs to be called at the end of every update
     void ClearLogs();
 
 #endif // DEBUG
 
-    //[???]
-    //A friend gave me an idea to be able to print the callstack on certain events
-    //any idea how to implement something like that?
 };
 
 #endif // !EVENTINTERFACE_H
